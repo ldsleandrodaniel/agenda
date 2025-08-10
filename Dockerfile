@@ -4,13 +4,13 @@ WORKDIR /src
 
 # 1. Copia arquivos necessários
 COPY ["*.csproj", "."]
-RUN dotnet restore
+RUN dotnet restore "Agenda.csproj"
 
-# 2. Copia o resto do código fonte
+# 2. Copia o resto
 COPY . .
 
-# 3. Publica o projeto
-RUN dotnet publish -c Release -o /publish \
+# 3. Publica o projeto (agora na raiz /publish)
+RUN dotnet publish "Agenda.csproj" -c Release -o /publish \
     -p:RuntimeIdentifier=linux-x64 \
     --self-contained false
 
@@ -29,8 +29,8 @@ EXPOSE 80
 ENV ASPNETCORE_URLS=http://+:80
 ENV ASPNETCORE_ENVIRONMENT=Production
 
-# 6. Copia os arquivos publicados
+# 6. Copia os arquivos publicados (agora da raiz /publish)
 COPY --from=build /publish .
 
-# 7. Entrypoint (ajustado para o nome do seu projeto)
+# 7. Entrypoint
 ENTRYPOINT ["dotnet", "Agenda.dll"]
