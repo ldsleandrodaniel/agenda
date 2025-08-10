@@ -27,18 +27,17 @@
     <!-- Container da agenda -->
     <div style="position: relative; min-height: 500px; background-image: url('/imagens/Agenda.jpg');
                 background-size: cover; background-repeat: no-repeat; background-position: center;
-                padding: 40px; margin-bottom: 20px;">
+                padding: 20px; margin-bottom: 20px;">
 
         <!-- Tabela com layout dinâmico -->
-        <div style="position: absolute; top: 40px; left: 50px; right: 50px; bottom: 50px;">
-            <div class="row">
+        <div style="position: absolute; top: 20px; left: 15px; right: 15px; bottom: 20px;">
+            <div class="row" style="display: flex; flex-wrap: nowrap; width: 100%;">
                 <!-- Coluna 1 (itens 1-11) -->
-                <div class="col-12 col-md-5">
-                    <!-- Adicionado col-12 para mobile -->
+                <div style="flex: 1; min-width: 0; padding-right: 10px;">
                     @foreach (var item in Model.Take(11))
                     {
                         <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
-                                    font-family: 'Brush Script MT', 'Segoe Script', cursive;">
+                                    font-family: 'Brush Script MT', 'Segoe Script', cursive; white-space: normal;">
                             @item.Titulo
                             @if (!string.IsNullOrEmpty(item.Descricao))
                             {
@@ -55,12 +54,11 @@
                 <!-- Coluna 2 (itens 12+) -->
                 @if (totalItems > 11)
                 {
-                    <div class="col-12 col-md-5 offset-md-2">
-                        <!-- Adicionado col-12 para mobile -->
+                    <div style="flex: 1; min-width: 0; padding-left: 10px;">
                         @foreach (var item in Model.Skip(11))
                         {
                             <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
-                                        font-family: 'Brush Script MT', 'Segoe Script', cursive;">
+                                        font-family: 'Brush Script MT', 'Segoe Script', cursive; white-space: normal;">
                                 @item.Titulo
                                 @if (!string.IsNullOrEmpty(item.Descricao))
                                 {
@@ -98,22 +96,28 @@
 </div>
 
 <style>
-    /* Apenas o estilo necessário para o ajuste mobile */
+    /* Ajustes para mobile */
     @@media (max-width: 768px) {
-        /* Ajusta o posicionamento interno */
         div[style*="background-image"] {
-            padding: 20px !important;
+            padding: 15px !important;
+            min-height: 400px;
         }
-        /* Ajusta o container interno */
+
         div[style*="position: absolute"] {
-            top: 20px !important;
-            left: 20px !important;
-            right: 20px !important;
-            bottom: 20px !important;
+            top: 15px !important;
+            left: 10px !important;
+            right: 10px !important;
+            bottom: 15px !important;
         }
-        /* Espaçamento entre itens em mobile */
+
         div[style*="margin-bottom: 11px"] {
-            margin-bottom: 15px !important;
+            margin-bottom: 8px !important;
+            font-size: 1em !important;
+        }
+
+        .btn-info {
+            padding: 0.15rem 0.3rem !important;
+            font-size: 0.8em !important;
         }
     }
 </style>
