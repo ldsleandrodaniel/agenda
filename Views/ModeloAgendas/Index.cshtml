@@ -1,0 +1,129 @@
+﻿@model IEnumerable<Agenda.Models.ModeloAgenda>
+
+@{
+    ViewData["Title"] = "Agenda";
+    int totalItems = Model.Count();
+}
+
+<div class="container">
+    <!-- Cabeçalho com seletor de data e botões de navegação -->
+    <div class="row align-items-center mb-4">
+        <div class="col-md-12 d-flex align-items-center">
+            <h1 class="mb-0 me-3">Agenda</h1>
+            <div class="d-flex align-items-center">
+                <button class="btn btn-outline-secondary btn-sm me-2" onclick="ajustarData(-1)" style="padding: 0.25rem 0.5rem;">
+                    <span style="font-size: 1.2em;">◀</span>
+                </button>
+                <input type="date" id="dataSelecionada" class="form-control form-control-sm"
+                       style="width: auto;"
+                       value="@DateTime.Today.ToString("yyyy-MM-dd")" />
+                <button class="btn btn-outline-secondary btn-sm ms-2" onclick="ajustarData(1)" style="padding: 0.25rem 0.5rem;">
+                    <span style="font-size: 1.2em;">▶</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Container da agenda -->
+    <div style="position: relative; min-height: 500px; background-image: url('/imagens/Agenda.jpg');
+                background-size: cover; background-repeat: no-repeat; background-position: center;
+                padding: 40px; margin-bottom: 20px;">
+
+        <!-- Tabela com layout dinâmico -->
+        <div style="position: absolute; top: 40px; left: 50px; right: 50px; bottom: 50px;">
+            <div class="row">
+                <!-- Coluna 1 (itens 1-11) -->
+                <div class="col-md-5">
+                    @foreach (var item in Model.Take(11))
+                    {
+                        <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
+                                    font-family: 'Brush Script MT', 'Segoe Script', cursive;">
+                            @item.Titulo
+                            @if (!string.IsNullOrEmpty(item.Descricao))
+                            {
+                                <a href="#" class="btn btn-sm btn-info ms-2"
+                                   onclick="mostrarDetalhes('@item.Descricao')"
+                                   style="opacity: 0.9;">
+                                    Detalhes
+                                </a>
+                            }
+                        </div>
+                    }
+                </div>
+
+                <!-- Coluna 2 (itens 12+) -->
+                @if (totalItems > 11)
+                {
+                    <div class="col-md-5 offset-md-2">
+                        @foreach (var item in Model.Skip(11))
+                        {
+                            <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
+                                        font-family: 'Brush Script MT', 'Segoe Script', cursive;">
+                                @item.Titulo
+                                @if (!string.IsNullOrEmpty(item.Descricao))
+                                {
+                                    <a href="#" class="btn btn-sm btn-info ms-2"
+                                       onclick="mostrarDetalhes('@item.Descricao')"
+                                       style="opacity: 0.9;">
+                                        Detalhes
+                                    </a>
+                                }
+                            </div>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal para mostrar detalhes -->
+<div class="modal fade" id="detalhesModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- A descrição será inserida aqui via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        // Funções para navegação de data
+        function ajustarData(dias) {
+            const inputData = document.getElementById('dataSelecionada');
+            const data = new Date(inputData.value);
+            data.setDate(data.getDate() + dias);
+            inputData.value = data.toISOString().split('T')[0];
+            window.location.href = `?data=${inputData.value}`;
+        }
+
+        // Função para mostrar detalhes no modal
+        function mostrarDetalhes(descricao) {
+            document.getElementById('modalBodyContent').innerText = descricao;
+            var myModal = new bootstrap.Modal(document.getElementById('detalhesModal'));
+            myModal.show();
+        }
+
+        // Código existente para o seletor de data
+        document.getElementById('dataSelecionada').addEventListener('change', function () {
+            const dataSelecionada = this.value;
+            window.location.href = `?data=${dataSelecionada}`;
+        });
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataParam = urlParams.get('data');
+
+        if (dataParam) {
+            document.getElementById('dataSelecionada').value = dataParam;
+        }
+    </script>
+}
