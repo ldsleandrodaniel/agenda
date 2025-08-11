@@ -6,7 +6,7 @@
 }
 
 <div class="container">
-    <!-- Cabeçalho (mantido igual) -->
+    <!-- Cabeçalho com seletor de data e botões de navegação -->
     <div class="row align-items-center mb-4">
         <div class="col-md-12 d-flex align-items-center">
             <h1 class="mb-0 me-3">Agenda</h1>
@@ -24,21 +24,20 @@
         </div>
     </div>
 
-    <!-- Container da agenda com posicionamento ajustado -->
+    <!-- Container da agenda -->
     <div style="position: relative; min-height: 500px; background-image: url('/imagens/Agenda.jpg');
                 background-size: cover; background-repeat: no-repeat; background-position: center;
                 padding: 40px; margin-bottom: 20px;">
 
-        <!-- Container interno com ajustes finos -->
-        <div style="position: absolute; top: 40px; left: 70px; right: 20px; bottom: 50px;">
-            <!-- Ajuste fino no top e right -->
-            <div class="row" style="display: flex; flex-wrap: nowrap; width: 100%;">
-                <!-- Coluna 1 -->
-                <div style="flex: 1; min-width: 0; padding-right: 15px;">
+        <!-- Tabela com layout dinâmico -->
+        <div style="position: absolute; top: 40px; left: 50px; right: 50px; bottom: 50px;">
+            <div class="row">
+                <!-- Coluna 1 (itens 1-11) -->
+                <div class="col-md-5">
                     @foreach (var item in Model.Take(11))
                     {
                         <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
-                                    font-family: 'Brush Script MT', 'Segoe Script', cursive; white-space: normal;">
+                                    font-family: 'Brush Script MT', 'Segoe Script', cursive;">
                             @item.Titulo
                             @if (!string.IsNullOrEmpty(item.Descricao))
                             {
@@ -52,15 +51,14 @@
                     }
                 </div>
 
-                <!-- Coluna 2 com margem esquerda aumentada -->
+                <!-- Coluna 2 (itens 12+) -->
                 @if (totalItems > 11)
                 {
-                    <div style="flex: 1; min-width: 0; padding-left: 60px; margin-left: 60px;">
-                        <!-- Ajuste fino na margem -->
+                    <div class="col-md-5 offset-md-2">
                         @foreach (var item in Model.Skip(11))
                         {
                             <div style="margin-bottom: 11px; font-size: 1.2em; font-weight: bold; color: #333;
-                                        font-family: 'Brush Script MT', 'Segoe Script', cursive; white-space: normal;">
+                                        font-family: 'Brush Script MT', 'Segoe Script', cursive;">
                                 @item.Titulo
                                 @if (!string.IsNullOrEmpty(item.Descricao))
                                 {
@@ -79,35 +77,27 @@
     </div>
 </div>
 
-<!-- Modal (mantido igual) -->
+<!-- Modal para mostrar detalhes -->
 <div class="modal fade" id="detalhesModal" tabindex="-1" aria-hidden="true">
-    <!-- ... conteúdo do modal ... -->
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Detalhes do Item</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" id="modalBodyContent">
+                <!-- A descrição será inserida aqui via JavaScript -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
 </div>
 
-<style>
-    /* Ajustes finos para mobile */
-    @@media (max-width: 768px) {
-        div[style*="background-image"] {
-            padding: 15px !important;
-            min-height: 400px;
-        }
-
-        div[style*="position: absolute"] {
-            top: 35px !important; /* Ajuste fino para mobile */
-            left: 30px !important;
-            right: 10px !important;
-            bottom: 15px !important;
-        }
-
-        div[style*="margin-left: 30px"] {
-            margin-left: 15px !important; /* Ajuste proporcional para mobile */
-        }
-    }
-</style>
-
 @section Scripts {
-    <!-- Scripts mantidos iguais -->
     <script>
+        // Funções para navegação de data
         function ajustarData(dias) {
             const inputData = document.getElementById('dataSelecionada');
             const data = new Date(inputData.value);
@@ -116,12 +106,14 @@
             window.location.href = `?data=${inputData.value}`;
         }
 
+        // Função para mostrar detalhes no modal
         function mostrarDetalhes(descricao) {
             document.getElementById('modalBodyContent').innerText = descricao;
             var myModal = new bootstrap.Modal(document.getElementById('detalhesModal'));
             myModal.show();
         }
 
+        // Código existente para o seletor de data
         document.getElementById('dataSelecionada').addEventListener('change', function () {
             const dataSelecionada = this.value;
             window.location.href = `?data=${dataSelecionada}`;

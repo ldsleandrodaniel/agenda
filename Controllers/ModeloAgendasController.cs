@@ -36,7 +36,14 @@ namespace Agenda.Controllers
                 .AsNoTracking()
                 .ToListAsync();
 
-            return View(registros);
+            // Detecção de dispositivo móvel
+            var userAgent = Request.Headers["User-Agent"].ToString();
+            bool isMobile = userAgent.Contains("Mobi") ||
+                           userAgent.Contains("Android") ||
+                           userAgent.Contains("iPhone") ||
+                           userAgent.Contains("Windows Phone");
+
+            return isMobile ? View("IndexCel", registros) : View(registros);
         }
 
         // GET: ModeloAgendas/Details/5
