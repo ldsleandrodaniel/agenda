@@ -31,7 +31,7 @@ namespace Agenda.Controllers
             }
 
             var registros = await _context.agenda
-                .Where(a => a.Data.Date == dataFiltro)
+                .Where(a => a.Data.Date == dataFiltro && a.Tipo != "A")
                 .OrderBy(a => a.Data)
                 .AsNoTracking()
                 .ToListAsync();
